@@ -65,7 +65,7 @@ export const Chat = () => {
         </div>
         <div className="message own">
           <div className="texts">
-            <img src="" alt="" />
+            <img src="https://w0.peakpx.com/wallpaper/494/397/HD-wallpaper-istanbul-kopru-bogaz-istanbul-turkey-turkiye.jpg" alt="" />
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, in.</p>
             <span>1 min ago</span>
           </div>
