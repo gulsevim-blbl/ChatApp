@@ -1,6 +1,9 @@
 import { useState } from "react"
 import "./loginPage.css"
 import { toast } from "react-toastify"
+import {createUserWithEmailAndPassword} from "firebase/auth"
+import { auth, db } from "../../lib/firebase"
+import { doc, setDoc } from "firebase/firestore"
 
 
 const LoginPage = () => {
@@ -20,11 +23,39 @@ const LoginPage = () => {
     }  
   }
 
+  const handleRegister =async (e) =>{
+    e.preventDefault()
+    const formData = new FormData(e.target);
+
+    const {username, email, password} =Object.fromEntries(formData);
+      /** kullanıcı oluşturma adımları */
+    try {
+      const res = await createUserWithEmailAndPassword(auth,email,password)
+      /** kullanıcı ve sohbetlerimizi veritabanına otomatik olarak oluşturacaktır */
+      await setDoc(doc(db ,"users",res.user.uid),{
+         username,
+         email,
+         id: res.user.uid,
+         blocked: [],
+      });
+
+      await setDoc(doc(db ,"userchats",res.user.uid),{
+        chats:[],
+     });
+    
+      toast.success("Account created! You Can Login Now!")
+    } catch (err) {
+      console.log(err)
+      toast.error(err.message)
+    }
+   };
+
    const handleLogin = e =>{
     e.preventDefault()
-    toast.success("Hello")
+    
    }
-
+  
+   
   return (
     <div className='login'>
       <div className="item">
@@ -38,7 +69,7 @@ const LoginPage = () => {
       <div className="separator"></div>
       <div className="item">
         <h2>Create an Account</h2>
-          <form>
+          <form onSubmit={handleRegister}>
             <label htmlFor="file">
               <img src={avatar.url || "./avatar.png"} alt="" />
               Upload an image</label>
